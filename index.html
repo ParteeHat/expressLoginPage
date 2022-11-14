@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <div>
+        <button onclick="window.location.href='/login'" id="login_button">LOGIN SITE</button>
+        <button onclick="window.location.href='/register'" id="register_button">REGISTER SITE</button>
+    </div>
+
+    <style>
+        div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        button {
+            background-color: white;
+            border: 1px solid black;
+            cursor: pointer;
+            color: black;
+        }
+
+        #login_button {
+            border-radius: 10px 0px 0px 10px;
+            border-right: 1px solid black;
+        }
+        #login_button:hover {
+            background-color: black;
+            color: white;
+            transition: 200ms;
+        }
+
+        #register_button {
+            border-radius: 0px 10px 10px 0px;
+            border-left: none;
+        }
+        #register_button:hover {
+            background-color: black;
+            color: white;
+            transition: 200ms;
+        }
+    </style>
+</body>
+</html>

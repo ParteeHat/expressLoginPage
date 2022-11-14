@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet"> 
+    </head>
+<body>
+    <form>
+        <h1>LOGIN</h1>
+        <input id="user_input_login" type="text" placeholder="Username"/>
+        <input id="pass_input_login" type="password" placeholder="Password"/>
+        <p hidden id="error_text">1</p>
+        <input id="login_button" type="submit" value="OK" />
+        <div id="forgot_register_wrapper">
+            <a href="">Forgot Password?</a>
+            <a href="/register">Register</a>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+        const userLogin = document.getElementById('user_input_login')
+        const passLogin = document.getElementById('pass_input_login')
+        document.getElementById("login_button").addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById("error_text").hidden = true;
+            fetch("/login", {
+                method: "POST",
+                headers: {'Content-Type': 'application/json'}, 
+                body: JSON.stringify({
+                    "username": userLogin.value,
+                    "password": passLogin.value
+                })
+            }).then(res => {
+                return res.json()
+            }).then(data => {
+                if (data.message == "Password is Incorrect" || data.message == "User Doesn't Exist" || data.message == "Input is empty") {
+                    document.getElementById("error_text").hidden = false;
+                    document.getElementById("error_text").innerText = data.message
+                } else {
+                    console.log("SUCCESS")
+                }
+            })
+        })
+    </script>
+
+    <style>
+        * {
+            padding: 0px;
+            margin: 0px;
+            font-family: 'Raleway', sans-serif;
+        }
+
+        form {
+            display: flex;
+            background-color: rgb(255, 255, 255);
+            flex-direction:  column;
+            align-items:  center;
+            justify-content: center;
+            width: 300px;
+            border-radius: 25px;
+            box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.65);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        h1 {
+            margin: 10px;
+            color:rgb(75, 75, 75)
+        }
+
+        #user_input_login, #pass_input_login {
+            background-color: rgba(0, 0, 0, 0);
+            border: none;
+            border-bottom: 1px solid rgb(180, 180, 180);
+            transition:  all 300ms ease;
+            margin: 5px;
+        }
+        #user_input_login:focus, #pass_input_login:focus{
+            outline: none;
+            border-bottom: 1px solid rgb(182, 157, 230);
+        }
+
+        #error_text {
+            font-size: 12px;
+            color: red;
+
+        }
+
+        #login_button {
+            background-color: rgb(182, 157, 230);
+            color: white;
+            border: none;
+            font-size: 20px;
+            padding: 5px 25px;
+            border-radius: 20px;
+            margin: 10px 0px 10px 0px;
+            transition:  all 300ms ease;
+            cursor: pointer;
+        }
+
+        #login_button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 2px 6px -1px rgba(182, 157, 230, 0.65);
+        }
+
+        #forgot_register_wrapper {
+            margin-bottom: 15px;
+            font-size: 12px;
+            width: 100%;
+            display: flex;
+            justify-content: space-evenly;
+            cursor: pointer;
+        }
+    </style>
+</body>
+</html>
