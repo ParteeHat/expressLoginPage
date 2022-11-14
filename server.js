@@ -13,18 +13,22 @@ const db = new sqlite3.Database(`${__dirname}/users.db`, sqlite3.OPEN_READWRITE,
 
 app.use(express.json())
 
+// Home Directory
 app.get("/", function (req, res) {
   res.sendFile(`${__dirname}/index.html`);
 });
 
+// Register Directory
 app.get("/register", function (req, res) {
   res.sendFile(`${__dirname}/register.html`);
 });
 
+// Login Directory
 app.get("/login", function (req, res) {
   res.sendFile(`${__dirname}/login.html`);
 });
 
+// Handle Register POST requests
 app.post("/register", function (req, res) {
   const body = req.body;
 
@@ -64,10 +68,12 @@ app.post("/register", function (req, res) {
   }
 });
 
+// Handle Login POST requests
 app.post('/login', (req, res) => {
   const body = req.body;
 
   if (!req.body.username || !req.body.password) {
+    // IF THE INPUT IS EMPTY
     res.status(418).send({message: "Input is empty"})
     return;
   }
@@ -80,11 +86,13 @@ app.post('/login', (req, res) => {
     rows.forEach(row => {
       if(row.username == body.username) {
         if(row.hashedPassword == scryptSync(body.password, row.salt, 64).toString('hex')) {
+          // IF THE USER AND PASSWORD ARE CORRECT
           const user = {name: body.username}
           const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
           res.json({accessToken: accessToken})
           console.log("CORRECT PASSWORD")
         } else {
+          // IF THE PASSWORD IS INCORRECT
           res.status(418).send({message: "Password is Incorrect"})
           console.log("WRONG PASSWORD")
         }
@@ -93,6 +101,7 @@ app.post('/login', (req, res) => {
       }
     })
     if(!foundUser) {
+      // IF THE USER DOES NOT EXIST
       res.status(418).send({message: "User Doesn't Exist"})
       console.log("COULDN'T FIND USER")
       return;
@@ -100,6 +109,7 @@ app.post('/login', (req, res) => {
   })
 })
 
+// Create JWT token and place in auth header
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization']
   const token = authHeader && authHeader.split(' ')[1]
@@ -127,9 +137,13 @@ app.get('/getPosts', authenticateToken, (req, res) => {
   res.json(posts.filter(post => post.username === req.user.name))
 })
 
+// Server Listener
 app.listen(port, function () {
   console.log(`Example app listening on port ${port}!`);
 });
 
+// Uncomment to create the table
 //db.run("CREATE TABLE users (username TEXT, salt TEXT, hashedPassword TEXT)")
+
+// Uncomment to drop the table
 //db.run("DROP TABLE users")
